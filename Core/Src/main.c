@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "modulator.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -44,6 +45,7 @@ TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim21;
 
 /* USER CODE BEGIN PV */
+Mod_Info modulator;
 
 /* USER CODE END PV */
 
@@ -95,6 +97,10 @@ int main(void)
 	
 	HAL_TIM_OC_Start(&htim21,TIM_CHANNEL_2);
 	HAL_TIM_Base_Start_IT(&htim2);
+	
+	// Default byte to be transmitted is 0x00
+	modulator.data_byte = 0x00;
+	modulator.periods_between_bytes = 10;
 
   /* USER CODE END 2 */
 
@@ -105,6 +111,18 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+		
+		// Currently bytes are transmitted constantly 
+		// REMARK: After delay byte is changed --> thus not wat is requested to send!!
+		// REMARK: The mcu does not check if it was finished sending the byte
+		// SOLUTION: Some kind of transmit-buffer is required in the modulation lib
+		
+		//HAL_Delay(100);
+		send_byte(&modulator, 0x11);
+		//HAL_Delay(100);
+		//send_byte(&modulator, 0xFF);
+		
+		
   }
   /* USER CODE END 3 */
 }
@@ -266,26 +284,9 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-/*
-uint8_t val = 0;
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
-{
-		if(htim == &htim2){
-			// Currently trigger at 104,8 Hz
-			if(val){
-				HAL_TIM_OC_Start(&htim21,TIM_CHANNEL_2);
-				val = 0;
-			}
-			else{
-				HAL_TIM_OC_Stop(&htim21,TIM_CHANNEL_2);
-				val = 1;
-			}
-		}
-}
-*/
-uint8_t counter = 0;
 
-uint8_t data_byte = 0xAB;
+uint8_t counter = 0;
+//uint8_t data_byte = 0xAB;
 
 // Currently trigger at 104,8 Hz
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
@@ -302,8 +303,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 		}
 		
 		else if(counter < 9){
-			if((data_byte & 1 << (counter-1))>>(counter-1)){ 	HAL_TIM_OC_Start(&htim21,TIM_CHANNEL_2); 	}
-			else{ 																						HAL_TIM_OC_Stop(&htim21,TIM_CHANNEL_2); 	}
+			if((modulator.data_byte & 1 << (counter-1))>>(counter-1)){ 	HAL_TIM_OC_Start(&htim21,TIM_CHANNEL_2); 	}
+			else{ 																												HAL_TIM_OC_Stop(&htim21,TIM_CHANNEL_2); 	}
 			counter++;
 		}
 		
@@ -315,15 +316,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 		}
 		
 		// Time between two bytes (12-9)*baudrate
-		else if(counter < 12){		counter++;		}
-		else if(counter == 12){	counter = 0;	}
+		else if(counter < 9 + modulator.periods_between_bytes){		counter++;		}
+		else if(counter == 9 + modulator.periods_between_bytes){		counter = 0;	}
 	}
 }
 
-
-static void send_byte(){
-	
-}
 
 /* USER CODE END 4 */
 

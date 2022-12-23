@@ -1,7 +1,7 @@
 Dependencies for Project 'firmwarev2', Target 'firmwarev2': (DO NOT MODIFY !)
 CompilerVersion: 5060750::V5.06 update 6 (build 750)::ARMCC
 F (startup_stm32l011xx.s)(0x63A48693)(--cpu Cortex-M0+ -g --apcs=interwork -I.\RTE\_firmwarev2-IC:\Users\JarneVanMulders\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\JarneVanMulders\AppData\Local\Arm\Packs\Keil\STM32L0xx_DFP\2.0.1\Drivers\CMSIS\Device\ST\STM32L0xx\Include--pd "__UVISION_VERSION SETA 529" --pd "_RTE_ SETA 1" --pd "STM32L011xx SETA 1"--list startup_stm32l011xx.lst --xref -o firmwarev2\startup_stm32l011xx.o --depend firmwarev2\startup_stm32l011xx.d)
-F (../Core/Src/main.c)(0x63A56453)(--c99 -c --cpu Cortex-M0+ -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_firmwarev2-IC:\Users\JarneVanMulders\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\JarneVanMulders\AppData\Local\Arm\Packs\Keil\STM32L0xx_DFP\2.0.1\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DSTM32L011xx -DUSE_HAL_DRIVER -DSTM32L011xx-o firmwarev2\main.o --omf_browse firmwarev2\main.crf --depend firmwarev2\main.d)
+F (../Core/Src/main.c)(0x63A585C8)(--c99 -c --cpu Cortex-M0+ -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_firmwarev2-IC:\Users\JarneVanMulders\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\JarneVanMulders\AppData\Local\Arm\Packs\Keil\STM32L0xx_DFP\2.0.1\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DSTM32L011xx -DUSE_HAL_DRIVER -DSTM32L011xx-o firmwarev2\main.o --omf_browse firmwarev2\main.crf --depend firmwarev2\main.d)
 I (../Core/Inc/main.h)(0x63A4868E)
 I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal.h)(0x63230E95)
 I (../Core/Inc/stm32l0xx_hal_conf.h)(0x63A4868E)
@@ -32,6 +32,7 @@ I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr.h)(0x63230E95)
 I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr_ex.h)(0x63230E95)
 I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_tim.h)(0x63230E95)
 I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_tim_ex.h)(0x63230E95)
+I (../Core/Inc/modulator.h)(0x63A585B2)
 F (../Core/Src/stm32l0xx_it.c)(0x63A4868E)(--c99 -c --cpu Cortex-M0+ -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_firmwarev2-IC:\Users\JarneVanMulders\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\JarneVanMulders\AppData\Local\Arm\Packs\Keil\STM32L0xx_DFP\2.0.1\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DSTM32L011xx -DUSE_HAL_DRIVER -DSTM32L011xx-o firmwarev2\stm32l0xx_it.o --omf_browse firmwarev2\stm32l0xx_it.crf --depend firmwarev2\stm32l0xx_it.d)
 I (../Core/Inc/main.h)(0x63A4868E)
 I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal.h)(0x63230E95)
@@ -95,6 +96,9 @@ I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr.h)(0x63230E95)
 I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_pwr_ex.h)(0x63230E95)
 I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_tim.h)(0x63230E95)
 I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal_tim_ex.h)(0x63230E95)
+F (..\Core\Src\modulator.c)(0x63A582C5)(--c99 -c --cpu Cortex-M0+ -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_firmwarev2-IC:\Users\JarneVanMulders\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\JarneVanMulders\AppData\Local\Arm\Packs\Keil\STM32L0xx_DFP\2.0.1\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DSTM32L011xx -DUSE_HAL_DRIVER -DSTM32L011xx-o firmwarev2\modulator.o --omf_browse firmwarev2\modulator.crf --depend firmwarev2\modulator.d)
+I (../Core/Inc/modulator.h)(0x63A585B2)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5D9B3488)
 F (../Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.c)(0x63230E95)(--c99 -c --cpu Cortex-M0+ -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc -I ../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L0xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_firmwarev2-IC:\Users\JarneVanMulders\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\JarneVanMulders\AppData\Local\Arm\Packs\Keil\STM32L0xx_DFP\2.0.1\Drivers\CMSIS\Device\ST\STM32L0xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DSTM32L011xx -DUSE_HAL_DRIVER -DSTM32L011xx-o firmwarev2\stm32l0xx_hal_tim.o --omf_browse firmwarev2\stm32l0xx_hal_tim.crf --depend firmwarev2\stm32l0xx_hal_tim.d)
 I (../Drivers/STM32L0xx_HAL_Driver/Inc/stm32l0xx_hal.h)(0x63230E95)
 I (../Core/Inc/stm32l0xx_hal_conf.h)(0x63A4868E)

@@ -3,6 +3,7 @@
 "firmwarev2\main.o"
 "firmwarev2\stm32l0xx_it.o"
 "firmwarev2\stm32l0xx_hal_msp.o"
+"firmwarev2\modulator.o"
 "firmwarev2\stm32l0xx_hal_tim.o"
 "firmwarev2\stm32l0xx_hal_tim_ex.o"
 "firmwarev2\stm32l0xx_hal.o"
