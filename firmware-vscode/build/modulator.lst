@@ -1,0 +1,233 @@
+ARM GAS  C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"modulator.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/modulator.c"
+  18              		.section	.text.init,"ax",%progbits
+  19              		.align	1
+  20              		.global	init
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	init:
+  26              	.LFB0:
+   1:Core/Src/modulator.c **** /**
+   2:Core/Src/modulator.c ****   ******************************************************************************
+   3:Core/Src/modulator.c ****   * @file    modulator.h
+   4:Core/Src/modulator.c ****   * @author  Jarne Van Mulders
+   5:Core/Src/modulator.c ****   * @brief   
+   6:Core/Src/modulator.c ****   ******************************************************************************
+   7:Core/Src/modulator.c ****   */
+   8:Core/Src/modulator.c **** 
+   9:Core/Src/modulator.c ****   /* Includes ------------------------------------------------------------------*/
+  10:Core/Src/modulator.c **** #include "modulator.h"
+  11:Core/Src/modulator.c **** 
+  12:Core/Src/modulator.c **** uint8_t transmit_buffer [10];
+  13:Core/Src/modulator.c **** CircularBuffer tx_buffer_manager;
+  14:Core/Src/modulator.c **** 
+  15:Core/Src/modulator.c **** void init(){
+  27              		.loc 1 15 12 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31 0000 10B5     		push	{r4, lr}
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 4, -8
+  34              		.cfi_offset 14, -4
+  16:Core/Src/modulator.c ****     init_buffer(&tx_buffer_manager, transmit_buffer, sizeof(transmit_buffer));
+  35              		.loc 1 16 5 view .LVU1
+  36 0002 0349     		ldr	r1, .L2
+  37 0004 0348     		ldr	r0, .L2+4
+  38 0006 0A22     		movs	r2, #10
+  39 0008 FFF7FEFF 		bl	init_buffer
+  40              	.LVL0:
+  17:Core/Src/modulator.c **** }
+  41              		.loc 1 17 1 is_stmt 0 view .LVU2
+ARM GAS  C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s 			page 2
+
+
+  42              		@ sp needed
+  43 000c 10BD     		pop	{r4, pc}
+  44              	.L3:
+  45 000e C046     		.align	2
+  46              	.L2:
+  47 0010 00000000 		.word	transmit_buffer
+  48 0014 00000000 		.word	tx_buffer_manager
+  49              		.cfi_endproc
+  50              	.LFE0:
+  52              		.section	.text.tx_byte,"ax",%progbits
+  53              		.align	1
+  54              		.global	tx_byte
+  55              		.syntax unified
+  56              		.code	16
+  57              		.thumb_func
+  59              	tx_byte:
+  60              	.LVL1:
+  61              	.LFB1:
+  18:Core/Src/modulator.c **** 
+  19:Core/Src/modulator.c **** // void send_byte(Mod_Info *modulator, uint8_t byte){
+  20:Core/Src/modulator.c **** // 	modulator->data_byte = byte;
+  21:Core/Src/modulator.c **** //     modulator->send_byte_now = 1;
+  22:Core/Src/modulator.c **** // }
+  23:Core/Src/modulator.c **** 
+  24:Core/Src/modulator.c **** void tx_byte(uint8_t byte){
+  62              		.loc 1 24 27 is_stmt 1 view -0
+  63              		.cfi_startproc
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66              		.loc 1 24 27 is_stmt 0 view .LVU4
+  67 0000 10B5     		push	{r4, lr}
+  68              		.cfi_def_cfa_offset 8
+  69              		.cfi_offset 4, -8
+  70              		.cfi_offset 14, -4
+  71 0002 0100     		movs	r1, r0
+  25:Core/Src/modulator.c ****     push(&tx_buffer_manager, byte);
+  72              		.loc 1 25 5 is_stmt 1 view .LVU5
+  73 0004 024B     		ldr	r3, .L5
+  74 0006 1800     		movs	r0, r3
+  75              	.LVL2:
+  76              		.loc 1 25 5 is_stmt 0 view .LVU6
+  77 0008 FFF7FEFF 		bl	push
+  78              	.LVL3:
+  26:Core/Src/modulator.c **** }
+  79              		.loc 1 26 1 view .LVU7
+  80              		@ sp needed
+  81 000c 10BD     		pop	{r4, pc}
+  82              	.L6:
+  83 000e C046     		.align	2
+  84              	.L5:
+  85 0010 00000000 		.word	tx_buffer_manager
+  86              		.cfi_endproc
+  87              	.LFE1:
+  89              		.section	.text.check_tx_buffer,"ax",%progbits
+  90              		.align	1
+  91              		.global	check_tx_buffer
+  92              		.syntax unified
+ARM GAS  C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s 			page 3
+
+
+  93              		.code	16
+  94              		.thumb_func
+  96              	check_tx_buffer:
+  97              	.LVL4:
+  98              	.LFB2:
+  27:Core/Src/modulator.c **** 
+  28:Core/Src/modulator.c **** void check_tx_buffer(Mod_Info *modulator){
+  99              		.loc 1 28 42 is_stmt 1 view -0
+ 100              		.cfi_startproc
+ 101              		@ args = 0, pretend = 0, frame = 0
+ 102              		@ frame_needed = 0, uses_anonymous_args = 0
+ 103              		.loc 1 28 42 is_stmt 0 view .LVU9
+ 104 0000 10B5     		push	{r4, lr}
+ 105              		.cfi_def_cfa_offset 8
+ 106              		.cfi_offset 4, -8
+ 107              		.cfi_offset 14, -4
+ 108 0002 0400     		movs	r4, r0
+  29:Core/Src/modulator.c ****     if(!is_empty(&tx_buffer_manager)){
+ 109              		.loc 1 29 5 is_stmt 1 view .LVU10
+ 110              		.loc 1 29 9 is_stmt 0 view .LVU11
+ 111 0004 0648     		ldr	r0, .L10
+ 112              	.LVL5:
+ 113              		.loc 1 29 9 view .LVU12
+ 114 0006 FFF7FEFF 		bl	is_empty
+ 115              	.LVL6:
+ 116              		.loc 1 29 7 view .LVU13
+ 117 000a 0028     		cmp	r0, #0
+ 118 000c 00D0     		beq	.L9
+ 119              	.L7:
+  30:Core/Src/modulator.c ****         modulator->data_byte = pull(&tx_buffer_manager);
+  31:Core/Src/modulator.c ****         modulator->available = 1;
+  32:Core/Src/modulator.c ****     }
+  33:Core/Src/modulator.c **** }...
+ 120              		.loc 1 33 1 view .LVU14
+ 121              		@ sp needed
+ 122              	.LVL7:
+ 123              		.loc 1 33 1 view .LVU15
+ 124 000e 10BD     		pop	{r4, pc}
+ 125              	.LVL8:
+ 126              	.L9:
+  30:Core/Src/modulator.c ****         modulator->data_byte = pull(&tx_buffer_manager);
+ 127              		.loc 1 30 9 is_stmt 1 view .LVU16
+  30:Core/Src/modulator.c ****         modulator->data_byte = pull(&tx_buffer_manager);
+ 128              		.loc 1 30 32 is_stmt 0 view .LVU17
+ 129 0010 0348     		ldr	r0, .L10
+ 130 0012 FFF7FEFF 		bl	pull
+ 131              	.LVL9:
+  30:Core/Src/modulator.c ****         modulator->data_byte = pull(&tx_buffer_manager);
+ 132              		.loc 1 30 30 view .LVU18
+ 133 0016 2070     		strb	r0, [r4]
+  31:Core/Src/modulator.c ****         modulator->available = 1;
+ 134              		.loc 1 31 9 is_stmt 1 view .LVU19
+  31:Core/Src/modulator.c ****         modulator->available = 1;
+ 135              		.loc 1 31 30 is_stmt 0 view .LVU20
+ 136 0018 0123     		movs	r3, #1
+ 137 001a A370     		strb	r3, [r4, #2]
+ 138              		.loc 1 33 1 view .LVU21
+ARM GAS  C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s 			page 4
+
+
+ 139 001c F7E7     		b	.L7
+ 140              	.L11:
+ 141 001e C046     		.align	2
+ 142              	.L10:
+ 143 0020 00000000 		.word	tx_buffer_manager
+ 144              		.cfi_endproc
+ 145              	.LFE2:
+ 147              		.global	tx_buffer_manager
+ 148              		.section	.bss.tx_buffer_manager,"aw",%nobits
+ 149              		.align	2
+ 152              	tx_buffer_manager:
+ 153 0000 00000000 		.space	8
+ 153      00000000 
+ 154              		.global	transmit_buffer
+ 155              		.section	.bss.transmit_buffer,"aw",%nobits
+ 156              		.align	2
+ 159              	transmit_buffer:
+ 160 0000 00000000 		.space	10
+ 160      00000000 
+ 160      0000
+ 161              		.text
+ 162              	.Letext0:
+ 163              		.file 2 "c:\\users\\jarne\\appdata\\roaming\\code\\user\\globalstorage\\bmd.stm32-for-vscode\\@xpa
+ 164              		.file 3 "c:\\users\\jarne\\appdata\\roaming\\code\\user\\globalstorage\\bmd.stm32-for-vscode\\@xpa
+ 165              		.file 4 "Core/Inc/circular_buffer.h"
+ 166              		.file 5 "Core/Inc/modulator.h"
+ARM GAS  C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 modulator.c
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:19     .text.init:0000000000000000 $t
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:25     .text.init:0000000000000000 init
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:47     .text.init:0000000000000010 $d
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:159    .bss.transmit_buffer:0000000000000000 transmit_buffer
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:152    .bss.tx_buffer_manager:0000000000000000 tx_buffer_manager
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:53     .text.tx_byte:0000000000000000 $t
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:59     .text.tx_byte:0000000000000000 tx_byte
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:85     .text.tx_byte:0000000000000010 $d
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:90     .text.check_tx_buffer:0000000000000000 $t
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:96     .text.check_tx_buffer:0000000000000000 check_tx_buffer
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:143    .text.check_tx_buffer:0000000000000020 $d
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:149    .bss.tx_buffer_manager:0000000000000000 $d
+C:\Users\jarne\AppData\Local\Temp\cctjk5Q1.s:156    .bss.transmit_buffer:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+init_buffer
+push
+is_empty
+pull

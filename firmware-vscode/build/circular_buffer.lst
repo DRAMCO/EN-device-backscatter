@@ -1,0 +1,247 @@
+ARM GAS  C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"circular_buffer.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/circular_buffer.c"
+  18              		.section	.text.init_buffer,"ax",%progbits
+  19              		.align	1
+  20              		.global	init_buffer
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	init_buffer:
+  26              	.LVL0:
+  27              	.LFB0:
+   1:Core/Src/circular_buffer.c **** /**
+   2:Core/Src/circular_buffer.c ****   ******************************************************************************
+   3:Core/Src/circular_buffer.c ****   * @file    modulator.h
+   4:Core/Src/circular_buffer.c ****   * @author  Jarne Van Mulders
+   5:Core/Src/circular_buffer.c ****   * @brief   
+   6:Core/Src/circular_buffer.c ****   ******************************************************************************
+   7:Core/Src/circular_buffer.c ****   */
+   8:Core/Src/circular_buffer.c **** 
+   9:Core/Src/circular_buffer.c ****   /* Includes ------------------------------------------------------------------*/
+  10:Core/Src/circular_buffer.c **** 
+  11:Core/Src/circular_buffer.c **** #include "circular_buffer.h"
+  12:Core/Src/circular_buffer.c **** 
+  13:Core/Src/circular_buffer.c **** // Function to initialize the circular buffer
+  14:Core/Src/circular_buffer.c **** void init_buffer(CircularBuffer* cb, uint8_t* buffer, uint8_t size) {
+  28              		.loc 1 14 69 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  15:Core/Src/circular_buffer.c ****     cb->buffer = buffer;
+  33              		.loc 1 15 5 view .LVU1
+  34              		.loc 1 15 16 is_stmt 0 view .LVU2
+  35 0000 0160     		str	r1, [r0]
+  16:Core/Src/circular_buffer.c ****     cb->size = size;
+  36              		.loc 1 16 5 is_stmt 1 view .LVU3
+  37              		.loc 1 16 14 is_stmt 0 view .LVU4
+  38 0002 0271     		strb	r2, [r0, #4]
+  17:Core/Src/circular_buffer.c ****     cb->head = 0;
+  39              		.loc 1 17 5 is_stmt 1 view .LVU5
+  40              		.loc 1 17 14 is_stmt 0 view .LVU6
+  41 0004 0023     		movs	r3, #0
+ARM GAS  C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s 			page 2
+
+
+  42 0006 4371     		strb	r3, [r0, #5]
+  18:Core/Src/circular_buffer.c ****     cb->tail = 0;
+  43              		.loc 1 18 5 is_stmt 1 view .LVU7
+  44              		.loc 1 18 14 is_stmt 0 view .LVU8
+  45 0008 8371     		strb	r3, [r0, #6]
+  19:Core/Src/circular_buffer.c **** }
+  46              		.loc 1 19 1 view .LVU9
+  47              		@ sp needed
+  48 000a 7047     		bx	lr
+  49              		.cfi_endproc
+  50              	.LFE0:
+  52              		.global	__aeabi_idivmod
+  53              		.section	.text.push,"ax",%progbits
+  54              		.align	1
+  55              		.global	push
+  56              		.syntax unified
+  57              		.code	16
+  58              		.thumb_func
+  60              	push:
+  61              	.LVL1:
+  62              	.LFB1:
+  20:Core/Src/circular_buffer.c **** 
+  21:Core/Src/circular_buffer.c **** // Function to push an element into the buffer
+  22:Core/Src/circular_buffer.c **** void push(CircularBuffer* cb, uint8_t value) {
+  63              		.loc 1 22 46 is_stmt 1 view -0
+  64              		.cfi_startproc
+  65              		@ args = 0, pretend = 0, frame = 0
+  66              		@ frame_needed = 0, uses_anonymous_args = 0
+  67              		.loc 1 22 46 is_stmt 0 view .LVU11
+  68 0000 10B5     		push	{r4, lr}
+  69              		.cfi_def_cfa_offset 8
+  70              		.cfi_offset 4, -8
+  71              		.cfi_offset 14, -4
+  72 0002 0400     		movs	r4, r0
+  23:Core/Src/circular_buffer.c ****     cb->buffer[cb->head] = value;
+  73              		.loc 1 23 5 is_stmt 1 view .LVU12
+  74              		.loc 1 23 7 is_stmt 0 view .LVU13
+  75 0004 0268     		ldr	r2, [r0]
+  76              		.loc 1 23 18 view .LVU14
+  77 0006 4379     		ldrb	r3, [r0, #5]
+  78              		.loc 1 23 26 view .LVU15
+  79 0008 D154     		strb	r1, [r2, r3]
+  24:Core/Src/circular_buffer.c ****     cb->head = (cb->head + 1) % cb->size;
+  80              		.loc 1 24 5 is_stmt 1 view .LVU16
+  81              		.loc 1 24 19 is_stmt 0 view .LVU17
+  82 000a 4079     		ldrb	r0, [r0, #5]
+  83              	.LVL2:
+  84              		.loc 1 24 26 view .LVU18
+  85 000c 0130     		adds	r0, r0, #1
+  86              		.loc 1 24 35 view .LVU19
+  87 000e 2179     		ldrb	r1, [r4, #4]
+  88              	.LVL3:
+  89              		.loc 1 24 31 view .LVU20
+  90 0010 FFF7FEFF 		bl	__aeabi_idivmod
+  91              	.LVL4:
+  92              		.loc 1 24 14 view .LVU21
+  93 0014 6171     		strb	r1, [r4, #5]
+ARM GAS  C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s 			page 3
+
+
+  25:Core/Src/circular_buffer.c **** }
+  94              		.loc 1 25 1 view .LVU22
+  95              		@ sp needed
+  96              	.LVL5:
+  97              		.loc 1 25 1 view .LVU23
+  98 0016 10BD     		pop	{r4, pc}
+  99              		.cfi_endproc
+ 100              	.LFE1:
+ 102              		.section	.text.pull,"ax",%progbits
+ 103              		.align	1
+ 104              		.global	pull
+ 105              		.syntax unified
+ 106              		.code	16
+ 107              		.thumb_func
+ 109              	pull:
+ 110              	.LVL6:
+ 111              	.LFB2:
+  26:Core/Src/circular_buffer.c **** 
+  27:Core/Src/circular_buffer.c **** // Function to pull an element from the buffer
+  28:Core/Src/circular_buffer.c **** uint8_t pull(CircularBuffer* cb) {
+ 112              		.loc 1 28 34 is_stmt 1 view -0
+ 113              		.cfi_startproc
+ 114              		@ args = 0, pretend = 0, frame = 0
+ 115              		@ frame_needed = 0, uses_anonymous_args = 0
+ 116              		.loc 1 28 34 is_stmt 0 view .LVU25
+ 117 0000 70B5     		push	{r4, r5, r6, lr}
+ 118              		.cfi_def_cfa_offset 16
+ 119              		.cfi_offset 4, -16
+ 120              		.cfi_offset 5, -12
+ 121              		.cfi_offset 6, -8
+ 122              		.cfi_offset 14, -4
+ 123 0002 0400     		movs	r4, r0
+  29:Core/Src/circular_buffer.c ****     uint8_t value = cb->buffer[cb->tail];
+ 124              		.loc 1 29 5 is_stmt 1 view .LVU26
+ 125              		.loc 1 29 23 is_stmt 0 view .LVU27
+ 126 0004 0368     		ldr	r3, [r0]
+ 127              		.loc 1 29 34 view .LVU28
+ 128 0006 8079     		ldrb	r0, [r0, #6]
+ 129              	.LVL7:
+ 130              		.loc 1 29 13 view .LVU29
+ 131 0008 1D5C     		ldrb	r5, [r3, r0]
+ 132              	.LVL8:
+  30:Core/Src/circular_buffer.c ****     cb->tail = (cb->tail + 1) % cb->size;
+ 133              		.loc 1 30 5 is_stmt 1 view .LVU30
+ 134              		.loc 1 30 26 is_stmt 0 view .LVU31
+ 135 000a 0130     		adds	r0, r0, #1
+ 136              	.LVL9:
+ 137              		.loc 1 30 35 view .LVU32
+ 138 000c 2179     		ldrb	r1, [r4, #4]
+ 139              		.loc 1 30 31 view .LVU33
+ 140 000e FFF7FEFF 		bl	__aeabi_idivmod
+ 141              	.LVL10:
+ 142              		.loc 1 30 14 view .LVU34
+ 143 0012 A171     		strb	r1, [r4, #6]
+  31:Core/Src/circular_buffer.c ****     return value;
+ 144              		.loc 1 31 5 is_stmt 1 view .LVU35
+  32:Core/Src/circular_buffer.c **** }
+ARM GAS  C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s 			page 4
+
+
+ 145              		.loc 1 32 1 is_stmt 0 view .LVU36
+ 146 0014 2800     		movs	r0, r5
+ 147              		@ sp needed
+ 148              	.LVL11:
+ 149              		.loc 1 32 1 view .LVU37
+ 150 0016 70BD     		pop	{r4, r5, r6, pc}
+ 151              		.cfi_endproc
+ 152              	.LFE2:
+ 154              		.section	.text.is_empty,"ax",%progbits
+ 155              		.align	1
+ 156              		.global	is_empty
+ 157              		.syntax unified
+ 158              		.code	16
+ 159              		.thumb_func
+ 161              	is_empty:
+ 162              	.LVL12:
+ 163              	.LFB3:
+  33:Core/Src/circular_buffer.c **** 
+  34:Core/Src/circular_buffer.c **** // Function to check if the buffer is empty
+  35:Core/Src/circular_buffer.c **** uint8_t is_empty(CircularBuffer* cb) {
+ 164              		.loc 1 35 38 is_stmt 1 view -0
+ 165              		.cfi_startproc
+ 166              		@ args = 0, pretend = 0, frame = 0
+ 167              		@ frame_needed = 0, uses_anonymous_args = 0
+ 168              		@ link register save eliminated.
+  36:Core/Src/circular_buffer.c ****     return cb->head == cb->tail;
+ 169              		.loc 1 36 5 view .LVU39
+ 170              		.loc 1 36 14 is_stmt 0 view .LVU40
+ 171 0000 4379     		ldrb	r3, [r0, #5]
+ 172              		.loc 1 36 26 view .LVU41
+ 173 0002 8079     		ldrb	r0, [r0, #6]
+ 174              	.LVL13:
+ 175              		.loc 1 36 21 view .LVU42
+ 176 0004 181A     		subs	r0, r3, r0
+ 177 0006 4342     		rsbs	r3, r0, #0
+ 178 0008 5841     		adcs	r0, r0, r3
+ 179 000a C0B2     		uxtb	r0, r0
+  37:Core/Src/circular_buffer.c **** }
+ 180              		.loc 1 37 1 view .LVU43
+ 181              		@ sp needed
+ 182 000c 7047     		bx	lr
+ 183              		.cfi_endproc
+ 184              	.LFE3:
+ 186              		.text
+ 187              	.Letext0:
+ 188              		.file 2 "c:\\users\\jarne\\appdata\\roaming\\code\\user\\globalstorage\\bmd.stm32-for-vscode\\@xpa
+ 189              		.file 3 "c:\\users\\jarne\\appdata\\roaming\\code\\user\\globalstorage\\bmd.stm32-for-vscode\\@xpa
+ 190              		.file 4 "Core/Inc/circular_buffer.h"
+ARM GAS  C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 circular_buffer.c
+C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s:19     .text.init_buffer:0000000000000000 $t
+C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s:25     .text.init_buffer:0000000000000000 init_buffer
+C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s:54     .text.push:0000000000000000 $t
+C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s:60     .text.push:0000000000000000 push
+C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s:103    .text.pull:0000000000000000 $t
+C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s:109    .text.pull:0000000000000000 pull
+C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s:155    .text.is_empty:0000000000000000 $t
+C:\Users\jarne\AppData\Local\Temp\ccbuUDMJ.s:161    .text.is_empty:0000000000000000 is_empty
+
+UNDEFINED SYMBOLS
+__aeabi_idivmod
