@@ -106,7 +106,7 @@ int main(void)
 	
 	// Default byte to be transmitted is 0x00
 	modulator.data_byte = 0x0B;
-	modulator.periods_between_bytes = 5;
+	modulator.periods_between_bytes = 5; // in reality + 1 (ToDo solve this issue)
 
   // init_buffer(&tx_buffer_manager, transmit_buffer, sizeof(transmit_buffer));
 
@@ -120,10 +120,11 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-    tx_byte(0x55);
-    tx_byte(0x77);
-    tx_byte(0x00);
-    HAL_Delay(50);
+    tx_byte(0xAA); // Begin delimiter
+    tx_byte(0x01); // Command
+    tx_byte(0x00); // Length data
+    tx_byte(0xAB); // Checksum
+    HAL_Delay(80);
 
     // tx_byte(0x0B);
     // HAL_Delay(100);
