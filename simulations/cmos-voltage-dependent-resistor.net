@@ -1,0 +1,12 @@
+* C:\Users\jarne\Documents\GitHub\EN-device-backscatter\simulations\cmos-voltage-dependent-resistor.asc
+M1 N002 N001 0 0 2N7002
+V1 N001 0 1
+R1 N001 N002 100Meg
+R2 N001 N003 10k
+M2 N003 N001 N002 N002 2N7002
+.model NMOS NMOS
+.model PMOS PMOS
+.lib C:\Users\jarne\AppData\Local\LTspice\lib\cmp\standard.mos
+.dc v1 0 3
+.backanno
+.end

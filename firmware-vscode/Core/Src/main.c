@@ -24,6 +24,8 @@
 /* USER CODE BEGIN Includes */
 #include "modulator.h"
 
+#define MSb
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -105,8 +107,8 @@ int main(void)
   init();
 	
 	// Default byte to be transmitted is 0x00
-	modulator.data_byte = 0x0B;
-	modulator.periods_between_bytes = 5; // in reality + 1 (ToDo solve this issue)
+	modulator.data_byte = 0x00;
+	modulator.periods_between_bytes = 1; // in reality + 1 (ToDo solve this issue)
 
   // init_buffer(&tx_buffer_manager, transmit_buffer, sizeof(transmit_buffer));
 
@@ -124,7 +126,9 @@ int main(void)
     tx_byte(0x01); // Command
     tx_byte(0x00); // Length data
     tx_byte(0xAB); // Checksum
-    HAL_Delay(80);
+    HAL_Delay(50);
+    // tx_byte(0xFF);
+    // HAL_Delay(12);
 
     // tx_byte(0x0B);
     // HAL_Delay(100);
@@ -324,14 +328,25 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
       }
       
       else if(counter < 9){
-        if((modulator.data_byte & 1 << (counter-1))>>(counter-1)){ 	  
-          HAL_TIM_OC_Start(&htim21,TIM_CHANNEL_2);
-          HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-        }
-        else{ 																												
-          HAL_TIM_OC_Stop(&htim21,TIM_CHANNEL_2);
-          HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-        }
+        #ifdef LSb
+          if((modulator.data_byte & 1 << (counter-1))>>(counter-1)){ 	  
+            HAL_TIM_OC_Start(&htim21,TIM_CHANNEL_2);
+            HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+          }
+          else{ 																												
+            HAL_TIM_OC_Stop(&htim21,TIM_CHANNEL_2);
+            HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+          }
+        #endif
+        #ifdef MSb
+          if ((modulator.data_byte & 1 << (8 - counter)) >> (8 - counter)) {
+            HAL_TIM_OC_Start(&htim21, TIM_CHANNEL_2);
+            HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+          } else {
+            HAL_TIM_OC_Stop(&htim21, TIM_CHANNEL_2);
+            HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+          }
+        #endif
         counter++;
       }
       
