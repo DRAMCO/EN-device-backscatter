@@ -23,6 +23,7 @@ options:
     sizing_mode: fixed
     thread_safe_setters: ''
     title: ook GR
+    window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
@@ -90,9 +91,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [280, 124.0]
+    coordinate: [480, 204.0]
     rotation: 0
-    state: bypassed
+    state: enabled
 - name: blocks_complex_to_mag_squared_0
   id: blocks_complex_to_mag_squared
   parameters:
@@ -106,7 +107,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [432, 336.0]
+    coordinate: [816, 280.0]
     rotation: 0
     state: true
 - name: blocks_keep_one_in_n_0
@@ -133,16 +134,16 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    high: 3E-5
+    high: 3E-10
     init: '0'
-    low: 1E-5
+    low: 1E-10
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [696, 244.0]
+    coordinate: [1216, 220.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -320,7 +321,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [896, 348.0]
+    coordinate: [1240, 468.0]
     rotation: 0
     state: true
 - name: uhd_usrp_source_0
@@ -770,3 +771,4 @@ connections:
 
 metadata:
   file_format: 1
+  grc_version: 3.10.7.0

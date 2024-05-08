@@ -1,33 +1,13 @@
 
-from distutils.version import StrictVersion
-
-from PyQt5 import Qt
-from PyQt5 import Qt, QtCore
-from gnuradio import blocks
-from gnuradio import eng_notation
-from gnuradio import filter
-from gnuradio import gr
-from gnuradio import qtgui
-from gnuradio import zeromq
-from gnuradio.eng_option import eng_option
-from gnuradio.filter import firdes
-from gnuradio.qtgui import Range, RangeWidget
-from optparse import OptionParser
-import osmosdr
-import sip
-import sys
-import time
-from gnuradio import qtgui
-
-
 import zmq
 import array
-from collections import deque
+from queue import Queue
 import numpy as np
 import math
 import matplotlib.pyplot as plt
 import numpy as numpy
 import scipy.signal
+import sys
 
 tau = numpy.pi * 2
 max_samples = 1000000
@@ -35,8 +15,13 @@ minpktlen = 15 * 8   # Minimum number of bits in a packet
 minsamples = 10000   # Minumum number of samples expected
 invalid_packets = 0
 packet_count = 0
-debug = True
+debug = False
 graph = False
+
+
+SYNC_WORD = [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1]
+SYNC_WORD_LEN = len(SYNC_WORD)
+PACKAGE_LEN = 6*8
 
 # Whole packet clock recovery adapted from Michael Ossman's wcpr.py
 # To learn more, see the following:
@@ -87,35 +72,25 @@ def getbytes(bits):
             byte = (byte << 1) | bit
         yield byte
 
+def getHex(bits):
+    num_bytes = len(bits)//8
+
+    # bits_lsb = []
+    # for byte_idx in range(num_bytes):
+    #     bits_lsb.extend(bits[byte_idx*num_bytes:(byte_idx+1)*num_bytes][::-1]) # select byte and inverse MSB-> LSB
+
+    bits_str = "".join([str(b) for b in bits[:num_bytes*8]])
+    print(bits_str)
+    return hex(int(bits_str, 2))
+
 def parsepacket(bits):  
-    global invalid_packets, packet_count
-    packet_count += 1
-    bytes = ''
-    for b in getbytes(iter(bits)):
-        bytes += str(chr(b))
-    if len(bits) < minpktlen:
-        print("Packet too short (%d bits)" %len(bits))
-        invalid_packets += 1
-        return
-    syncword = (ord(bytes[0])<<8) + ord(bytes[1])
-    if(syncword != 0x2dd4):
-        print("Invalid packet")
-        invalid_packets += 1
-        return
-    length = ord(bytes[2])
-    if(length > len(bytes) - 6):
-        print("Invalid length: " %length)
-        invalid_packets += 1
-        return
-    crc = (ord(bytes[3+length+1])<<8) + ord(bytes[3+length+2])
-    print(":".join("{:02x}".format(ord(bytes[c])) for c in range(4+length+2))),
-    print(" "),
-    for i in range(4+length+2):
-        char = bytes[i]
-        if ord(char) < 32 or ord(char) >= 127:
-            char = '.'
-        sys.stdout.write(char)
-    print("\n")
+    bytes_str = ''
+    # packet structure
+    # 1 0xAA 0x08 0x01 0x01 0x08 0x01 0x00 0x08 0x01 0xAB 1
+    bits = bits[1:] # remove first bit
+    print(getHex(bits))
+    
+
 
 def decode(values = []):
     global invalid_packets
@@ -126,14 +101,14 @@ def decode(values = []):
         plt.ion()
         plt.clf()
         plt.show()
-        plt.plot(range(np.alen(samples)), samples)
+        plt.plot(samples)
         plt.draw()
         plt.pause(0.000001)
     
     # Clock Recovery
     b = samples > midpoint(samples)
     d = numpy.diff(b)**2
-    f = scipy.fft(d, len(samples))
+    f = scipy.fft.fft(d, len(samples))
     p = find_clock_frequency(abs(f))
     p = int(p)
     
@@ -143,10 +118,10 @@ def decode(values = []):
     if clock_phase <= 0.5:
         clock_phase += 1
     symbols = []
-    for i in range(len(samples)):
+    for sample in samples:
         if clock_phase >= 1:
             clock_phase -= 1
-            symbols.append(samples[i])
+            symbols.append(sample)
         clock_phase += cycles_per_sample
     if debug:
         print("peak frequency index: %d / %d" % (p, len(f)))
@@ -159,70 +134,64 @@ def decode(values = []):
 
     # Extract bits
     bits=slice_bits(symbols)
-    if debug:
-        print(list(bits))
+    # if debug:
+    #     print(list(bits))
 
+    def cmp(l1,l2):
+        if len(l1) != len(l2):
+            return False
+        return all(x == y for x, y in zip(l1, l2))
+
+    sync_found = False
+    
     # Align to sync word for beginning of packet
-    for i in range(1,50):
-        syncword = [0,0,1,0,1,1,0,1,1,1,0,1,0,1,0,0]
-        tmpbits = bits[i:]
-        if(cmp(syncword,tmpbits[:16].tolist()) == 0):
-            bits = bits[i:]
-            break
+    for i in range(1,len(bits)-SYNC_WORD_LEN):
+        tmpbits = bits[i:i+SYNC_WORD_LEN]
+        if cmp(SYNC_WORD, tmpbits):
+            print("SYNC FOUND")
+            # sync_found = True
+            # bits = bits[i:i+6*8]
+            parsepacket(list(bits[i:i+6*8]))
+            # break
+    
 
     # Parse and print packet bytes
-    parsepacket(list(bits))
+    # if sync_found:
+    #     parsepacket(list(bits))
     
 def zmq_consumer():
-    bufsize = 370000            # Number of samples to keep at a time (should be greater than the number of samples in a packet)
-    packet_started = False      # Whether or not we've received the first sample of the next/current packet
     packet_finished = False     # Whether or not we have the last sample of the current packet
     packet_samples = 0          # Number of samples in the current packet (once we have them all)
-    threshold = 0.025           # Threshold over which we consider a signal to have been detected
+    sps = 4                     # samples per symbol
     below_thresh = 0            # Number of samples since we've been below the threshold
-    trailing_pad = 6000         # How many samples below the thresold do we want to keep at the end of each packet
 
     context = zmq.Context()
     results_amplitude = context.socket(zmq.PULL)
     results_amplitude.connect("tcp://127.0.0.1:5558")
 
-    amplitude_ring = deque('',80000)  # Buffer that contains the amplitude samples
+    amplitude_ring = Queue(maxsize=80000)  # Buffer that contains the amplitude samples
     
     while True:
         # Read in the amplitude samples
         raw_amplitude = results_amplitude.recv()
+        if not packet_finished:
+            print('.', end="", flush=True)
         amp_list = array.array('f', raw_amplitude) # struct.unpack will be faster
         if len(amp_list) >= 0:
             for f in amp_list:
-                amplitude_ring.append(f)
-                if packet_finished:
-                    continue
-                if not packet_started:
-                    if f > threshold:
-                        packet_started = True
-                        # Remove all the samples but the most recent ones (truncate the deque)
-                        for i in range(len(amplitude_ring)-200):
-                            amplitude_ring.popleft()
+                if amplitude_ring.full():
+                    packet_finished = True
                 else:
-                    if f < threshold:
-                        below_thresh += 1
-                        if below_thresh >= trailing_pad:
-                            multiplier = int(len(amplitude_ring) / 8192);
-                            if len(amplitude_ring) == multiplier * 8192:
-                                packet_finished = True
-                                packet_samples = len(amplitude_ring)
-                    else:
-                        below_thresh = 0
+                    amplitude_ring.put(f)
         
         # Send to demodulator when ready
         if packet_finished:
-            packet = list(amplitude_ring)
-            del packet[packet_samples:]
+            packet = list(amplitude_ring.queue)
             decode(packet)
-            amplitude_ring.clear()
-            packet_started = False
+            _ = [amplitude_ring.get() for _ in range(amplitude_ring.qsize())]
             packet_finished = False
             below_thresh = 0
+            
 
      
 def main():
