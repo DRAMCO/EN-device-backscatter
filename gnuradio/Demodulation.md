@@ -32,7 +32,7 @@ A general Phase Locked Loop (PLL) for Symbol Timing Recovery, as used in the sym
 -   Matched filter output at 1 sample/symbol: $z(m\,T_M+\hatϵΔ)$ where $m$ is an integer
 -   Square-root Raised Cosine pulse shape: $p(n\,T_S)$
 
-![enter image description here](https://wirelesspi.com/wp-content/uploads/2020/11/figure-timing-sync-phase-locked-loop-pll.png)
+![Sync Phased Loop](https://wirelesspi.com/wp-content/uploads/2020/11/figure-timing-sync-phase-locked-loop-pll.png)
 At the receiver, the arriving signal $r(t)$ is sampled by a free running clock at a constant rate $1/T_S$ that is asynchronous to the symbol rate $1/T_M$ as shown in the figure above. These samples $r(n\,T_S)$ are matched filtered to produce $z(n\,T_S)$ at $L$ samples/symbol, none of which lies at the symbol boundary, i.e., an integer multiple of $T_M$. Here, the job of the timing synchronization loop is twofold.
 
 1.  Figure out an estimate of the timing offset $\hatϵ_Δ$(or an error signal $e_D[m]$   proportional to it).
