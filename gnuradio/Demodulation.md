@@ -87,5 +87,5 @@ These samples are drawn in the figure below, where the slope is being computed a
 These early and late samples can be employed for computing the derivative because they overlap with the coefficients −1 and +1 of $h[−n]$ during the convolution process, as shown in the figure above (remember one of the signals, $h[n]$ here, is reversed during convolution). 
 Thus, a non-data-aided Early-Late Timing Error Detector (TED) can be constructed by replacing the derivative term   $\dot z(m\,T_M+\hatε_Δ)$ in the maximum likelihood TED as:  
 
-$eD[m]=z(m\,T_M+\hatε_Δ) \left\{z(m\,T_M+\frac{T_M}{2}+\hatε_Δ) –z(m\,T_M−\frac{T_M}{2}+\hatε_Δ)\right\}$
+$eD[m]=z(m\,T_M+\hatε_Δ) \left( z(m\,T_M+\frac{T_M}{2}+\hatε_Δ) –z(m\,T_M−\frac{T_M}{2}+\hatε_Δ)\right)$
 
